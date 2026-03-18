@@ -7,56 +7,59 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Main Game Container -->
     <div id="game-wrapper">
-        <!-- Game Canvas (for future WebGL rendering) -->
+        <!-- Game Canvas for 3D Rendering -->
         <canvas id="game-canvas"></canvas>
         
-        <!-- Game UI Overlay -->
+        <!-- UI Overlay -->
         <div id="game-ui">
-            <!-- HUD Elements -->
+            <!-- HUD -->
             <div id="hud">
                 <div class="hud-item" id="health-container">
-                    <span class="hud-icon">❤️</span>
-                    <div class="hud-bar">
-                        <div id="health-fill" class="fill-bar" style="width: 100%"></div>
+                    <div class="hud-icon">❤️</div>
+                    <div class="hud-bar-container">
+                        <div class="hud-bar">
+                            <div id="health-fill" class="fill-bar" style="width: 100%"></div>
+                        </div>
+                        <span id="health-value" class="hud-value">100</span>
                     </div>
-                    <span id="health-value">100</span>
                 </div>
                 
                 <div class="hud-item" id="sanity-container">
-                    <span class="hud-icon">🧠</span>
-                    <div class="hud-bar">
-                        <div id="sanity-fill" class="fill-bar" style="width: 100%"></div>
+                    <div class="hud-icon">🧠</div>
+                    <div class="hud-bar-container">
+                        <div class="hud-bar">
+                            <div id="sanity-fill" class="fill-bar" style="width: 100%"></div>
+                        </div>
+                        <span id="sanity-value" class="hud-value">100</span>
                     </div>
-                    <span id="sanity-value">100</span>
                 </div>
                 
                 <div class="hud-item" id="flashlight-container">
-                    <span class="hud-icon">🔦</span>
-                    <div class="hud-bar">
-                        <div id="flashlight-fill" class="fill-bar" style="width: 100%"></div>
+                    <div class="hud-icon">🔦</div>
+                    <div class="hud-bar-container">
+                        <div class="hud-bar">
+                            <div id="flashlight-fill" class="fill-bar" style="width: 100%"></div>
+                        </div>
+                        <span id="flashlight-value" class="hud-value">100%</span>
                     </div>
-                    <span id="flashlight-value">100%</span>
                 </div>
             </div>
             
-            <!-- Crosshair -->
+            <!-- Crosshair (CSS Generated) -->
             <div id="crosshair">
-                <div class="crosshair-part crosshair-top"></div>
-                <div class="crosshair-part crosshair-right"></div>
-                <div class="crosshair-part crosshair-bottom"></div>
-                <div class="crosshair-part crosshair-left"></div>
-                <div class="crosshair-center"></div>
+                <div class="crosshair-line horizontal"></div>
+                <div class="crosshair-line vertical"></div>
+                <div class="crosshair-dot"></div>
             </div>
             
             <!-- Interaction Prompt -->
             <div id="interaction-prompt" class="hidden">
-                <span id="interaction-key">[E]</span>
-                <span id="interaction-text"></span>
+                <div id="interaction-key">E</div>
+                <div id="interaction-text">Interact</div>
             </div>
             
-            <!-- Inventory -->
+            <!-- Inventory (CSS Generated Slots) -->
             <div id="inventory">
                 <div class="inventory-slot" id="slot-1"></div>
                 <div class="inventory-slot" id="slot-2"></div>
@@ -66,37 +69,70 @@
             
             <!-- Objective Tracker -->
             <div id="objective-tracker">
-                <h3>Current Objective</h3>
-                <p id="current-objective">Find a way out</p>
+                <div class="objective-title">CURRENT OBJECTIVE</div>
+                <div id="current-objective">Find a way out</div>
             </div>
+            
+            <!-- Message Area -->
+            <div id="message-area" class="hidden"></div>
         </div>
         
-        <!-- Menus -->
+        <!-- Main Menu -->
         <div id="main-menu" class="menu active">
             <h1 class="game-title">SHADOW CORRIDOR</h1>
             <div class="menu-buttons">
-                <button class="menu-btn" onclick="Game.startNewGame()">New Game</button>
-                <button class="menu-btn" onclick="Game.showOptions()">Options</button>
-                <button class="menu-btn" onclick="Game.showCredits()">Credits</button>
+                <button class="menu-btn" onclick="Game.startNewGame()">NEW GAME</button>
+                <button class="menu-btn" onclick="Game.showControls()">CONTROLS</button>
+                <button class="menu-btn" onclick="Game.showCredits()">CREDITS</button>
             </div>
+            <div class="version">v1.0</div>
         </div>
         
+        <!-- Pause Menu -->
         <div id="pause-menu" class="menu hidden">
             <h2>PAUSED</h2>
             <div class="menu-buttons">
-                <button class="menu-btn" onclick="Game.resume()">Resume</button>
-                <button class="menu-btn" onclick="Game.showOptions()">Options</button>
-                <button class="menu-btn" onclick="Game.quitToMenu()">Quit to Menu</button>
+                <button class="menu-btn" onclick="Game.resume()">RESUME</button>
+                <button class="menu-btn" onclick="Game.showControls()">CONTROLS</button>
+                <button class="menu-btn" onclick="Game.quitToMenu()">QUIT TO MENU</button>
             </div>
         </div>
         
+        <!-- Game Over Menu -->
         <div id="game-over-menu" class="menu hidden">
             <h2 class="game-over-title">GAME OVER</h2>
-            <p id="death-message">You have succumbed to the darkness...</p>
+            <div id="death-message">You have succumbed to the darkness...</div>
             <div class="menu-buttons">
-                <button class="menu-btn" onclick="Game.restartFromCheckpoint()">Restart</button>
-                <button class="menu-btn" onclick="Game.quitToMenu()">Main Menu</button>
+                <button class="menu-btn" onclick="Game.restartFromCheckpoint()">RESTART</button>
+                <button class="menu-btn" onclick="Game.quitToMenu()">MAIN MENU</button>
             </div>
+        </div>
+        
+        <!-- Controls Menu -->
+        <div id="controls-menu" class="menu hidden">
+            <h2>CONTROLS</h2>
+            <div class="controls-list">
+                <div class="control-item"><span class="control-key">WASD</span> <span class="control-desc">Move</span></div>
+                <div class="control-item"><span class="control-key">MOUSE</span> <span class="control-desc">Look around</span></div>
+                <div class="control-item"><span class="control-key">F</span> <span class="control-desc">Flashlight</span></div>
+                <div class="control-item"><span class="control-key">E</span> <span class="control-desc">Interact</span></div>
+                <div class="control-item"><span class="control-key">ESC</span> <span class="control-desc">Pause</span></div>
+                <div class="control-item"><span class="control-key">SHIFT</span> <span class="control-desc">Run</span></div>
+            </div>
+            <button class="menu-btn back-btn" onclick="Game.hideControls()">BACK</button>
+        </div>
+        
+        <!-- Credits Menu -->
+        <div id="credits-menu" class="menu hidden">
+            <h2>CREDITS</h2>
+            <div class="credits-content">
+                <p>SHADOW CORRIDOR</p>
+                <p>A First Person Horror Experience</p>
+                <p class="credit-line">Created with HTML, CSS, and JavaScript</p>
+                <p class="credit-line">Special thanks to all horror game fans</p>
+                <p class="credit-line">© 2024</p>
+            </div>
+            <button class="menu-btn back-btn" onclick="Game.hideCredits()">BACK</button>
         </div>
     </div>
 
